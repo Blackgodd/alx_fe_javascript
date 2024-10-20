@@ -23,33 +23,25 @@ document.addEventListener('DOMContentLoaded', () => {
     // Display random quote
     function showRandomQuote() {
         const quoteDisplay = document.getElementById('quoteDisplay');
-        quoteDisplay.textContent = "";  // Clear previous quote
-
         if (quotes.length === 0) {
-            const noQuoteText = document.createTextNode("No quotes available!");
-            quoteDisplay.appendChild(noQuoteText);
+            quoteDisplay.innerHTML = "No quotes available!";
             return;
         }
 
         const randomIndex = Math.floor(Math.random() * quotes.length);
         const randomQuote = quotes[randomIndex];
-
-        const quoteText = document.createTextNode(`"${randomQuote.text}" - ${randomQuote.category}`);
-        quoteDisplay.appendChild(quoteText);
+        quoteDisplay.innerHTML = `"${randomQuote.text}" - ${randomQuote.category}`;
 
         sessionStorage.setItem('lastViewedQuote', JSON.stringify(randomQuote));
     }
 
     // Load last viewed quote from sessionStorage
     function loadLastViewedQuote() {
-        const quoteDisplay = document.getElementById('quoteDisplay');
-        quoteDisplay.textContent = "";  // Clear previous quote
-
         const lastViewedQuote = sessionStorage.getItem('lastViewedQuote');
+        const quoteDisplay = document.getElementById('quoteDisplay');
         if (lastViewedQuote) {
             const quote = JSON.parse(lastViewedQuote);
-            const quoteText = document.createTextNode(`"${quote.text}" - ${quote.category}`);
-            quoteDisplay.appendChild(quoteText);
+            quoteDisplay.innerHTML = `"${quote.text}" - ${quote.category}`;
         } else {
             showRandomQuote();  // Show a random quote if no session data exists
         }
@@ -73,9 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('newQuoteCategory').value = '';
 
         const quoteDisplay = document.getElementById('quoteDisplay');
-        quoteDisplay.textContent = "";  // Clear previous quote
-        const addedText = document.createTextNode(`Added: "${newQuote.text}" - ${newQuote.category}`);
-        quoteDisplay.appendChild(addedText);
+        quoteDisplay.innerHTML = `Added: "${newQuote.text}" - ${newQuote.category}`;
     }
 
     // Export quotes as JSON
@@ -113,15 +103,12 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsText(file);
     }
 
-    // Select elements
-    const newQuoteBtn = document.getElementById('newQuote');
-
     // Load quotes and last viewed quote on page load
     loadQuotesFromLocalStorage();
     loadLastViewedQuote();
 
     // Event listener for new quote button
-    newQuoteBtn.addEventListener('click', showRandomQuote);
+    document.getElementById('newQuote').addEventListener('click', showRandomQuote);
 
     // Event listener for import
     document.getElementById('importFile').addEventListener('change', importQuotesFromJson);
