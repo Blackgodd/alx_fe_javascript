@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ];
             saveQuotesToLocalStorage();
         }
+        displayAllQuotes();
     }
 
     // Save quotes to localStorage
@@ -47,10 +48,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Add new quote
-    function addQuote() {
-        const newQuoteText = document.getElementById('newQuoteText').value.trim();
-        const newQuoteCategory = document.getElementById('newQuoteCategory').value.trim();
+    // Add new quote and append it to the DOM
+    function addQuote(text, category) {
+        const newQuoteText = text.trim();
+        const newQuoteCategory = category.trim();
 
         if (newQuoteText === "" || newQuoteCategory === "") {
             alert("Both fields are required!");
@@ -60,12 +61,68 @@ document.addEventListener('DOMContentLoaded', () => {
         const newQuote = { text: newQuoteText, category: newQuoteCategory };
         quotes.push(newQuote);
         saveQuotesToLocalStorage();
-
-        document.getElementById('newQuoteText').value = '';
-        document.getElementById('newQuoteCategory').value = '';
+        appendQuoteToDOM(newQuote);
 
         const quoteDisplay = document.getElementById('quoteDisplay');
         quoteDisplay.innerHTML = `Added: "${newQuote.text}" - ${newQuote.category}`;
+    }
+
+    // Append new quote to the DOM
+    function appendQuoteToDOM(quote) {
+        const listContainer = document.getElementById('quoteList');
+
+        const listItem = document.createElement('li');
+        listItem.textContent = `"${quote.text}" - ${quote.category}`;
+
+        listContainer.appendChild(listItem);
+    }
+
+    // Create form for adding new quotes
+    function createAddQuoteForm() {
+        const formContainer = document.createElement('div');
+        formContainer.id = 'quoteFormContainer';
+
+        const inputQuote = document.createElement('input');
+        inputQuote.id = 'newQuoteText';
+        inputQuote.type = 'text';
+        inputQuote.placeholder = 'Enter a new quote';
+
+        const inputCategory = document.createElement('input');
+        inputCategory.id = 'newQuoteCategory';
+        inputCategory.type = 'text';
+        inputCategory.placeholder = 'Enter quote category';
+
+        const addButton = document.createElement('button');
+        addButton.textContent = 'Add Quote';
+        addButton.addEventListener('click', function () {
+            const text = inputQuote.value;
+            const category = inputCategory.value;
+            addQuote(text, category);
+            inputQuote.value = '';
+            inputCategory.value = '';
+        });
+
+        formContainer.appendChild(inputQuote);
+        formContainer.appendChild(inputCategory);
+        formContainer.appendChild(addButton);
+
+        const appContainer = document.getElementById('app');
+        appContainer.appendChild(formContainer);
+    }
+
+    // Display all quotes on page load
+    function displayAllQuotes() {
+        const listContainer = document.createElement('ul');
+        listContainer.id = 'quoteList';
+
+        quotes.forEach(quote => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `"${quote.text}" - ${quote.category}`;
+            listContainer.appendChild(listItem);
+        });
+
+        const appContainer = document.getElementById('app');
+        appContainer.appendChild(listContainer);
     }
 
     // Export quotes as JSON
@@ -91,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (Array.isArray(importedQuotes)) {
                     quotes = quotes.concat(importedQuotes);
                     saveQuotesToLocalStorage();
+                    displayAllQuotes();
                     alert("Quotes successfully imported!");
                 } else {
                     alert("Invalid JSON format!");
@@ -113,14 +171,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Event listener for import
     document.getElementById('importFile').addEventListener('change', importQuotesFromJson);
 
+    // Create and append the form to add new quotes
+    createAddQuoteForm();
+
     // Expose functions to the global scope
     window.addQuote = addQuote;
     window.exportQuotesToJson = exportQuotesToJson;
-
-     // Create and append the form to add new quotes
-     createAddQuoteForm();
-
-     // Expose functions to the global scope
-     window.addQuote = addQuote;
-     window.exportQuotesToJson = exportQuotesToJson;
 });
