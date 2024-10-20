@@ -116,4 +116,11 @@ document.addEventListener('DOMContentLoaded', () => {
     // Expose functions to the global scope
     window.addQuote = addQuote;
     window.exportQuotesToJson = exportQuotesToJson;
+
+     // Create and append the form to add new quotes
+     createAddQuoteForm();
+
+     // Expose functions to the global scope
+     window.addQuote = addQuote;
+     window.exportQuotesToJson = exportQuotesToJson;
 });

@@ -13,7 +13,14 @@
         <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
         <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
         <button onclick="addQuote()">Add Quote</button>
-      </div>
+    </div>
+
+    <!-- A container for adding new quotes dynamically -->
+    <div id="app"></div>
+
+    <input type="file" id="importFile" accept=".json">
+    <button onclick="exportQuotesToJson()">Export Quotes</button>
+
 
       <!-- JSON Export and Import buttons -->
     <div>
